@@ -22,7 +22,7 @@ var format = w.toString() + "px Arial" //format for room indexing numbers
 var disX; //distance x between rooms
 var disY; //distance y between rooms
 var corridorW = 1; //corridor width
-console.log("this is the minSize " + sizeMin + " and this is the size" + size)
+//console.log("this is the minSize " + sizeMin + " and this is the size" + size)
 
  ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
@@ -92,8 +92,8 @@ function makeGrid()//create the array of tiles
 //Defines the squares and attaches a number for easy reference
 class Room {
     constructor(x, y, width, height, i) {
-        this.x = x * w; //column
-        this.y = y * w; //row
+        this.x = x; //column
+        this.y = y; //row
         this.w = width * w; //width
         this.h = height * w; //height
 
@@ -111,9 +111,9 @@ class Room {
 // Used for directional generation, w is divided so room values can be reused without compounding values
 class Wall {
     constructor(x, y, stretch, id) {
-      this.x = Math.round(x / w); //start pos
-      this.y = Math.round(y / w); //start pos
-      this.s = Math.round(stretch / w); //used for calculations of one side from the x,y coords
+      this.x = x; //start pos
+      this.y = y; //start pos
+      this.s = stretch; //used for calculations of one side from the x,y coords
       this.id = id; //used later to identify in switch statements
     }
 }
@@ -121,20 +121,29 @@ class Wall {
 
 function createRooms()//create the rooms
 	{
-		console.log("This is the amount of failed tries " + stuck);
+		console.log("NEW ITERATION");
 		// First room is out of loop as some special case setup is required
 		var room = new Room(
-			rows/2 - sizeMin, 
-			cols/2 - sizeMin, 
+			canvas.width / 2 - sizeMin * w, // same as below
+			canvas.height / 2 - sizeMin * w, // - sizeMin for balance
 			Math.floor(Math.random() * size) + sizeMin, 
 			Math.floor(Math.random() * size) + sizeMin,
 			0);
 		//centralized room to seed the random generation
 
-		var wall1 = new Wall(room.x + 1, room.y + 1, room.w, 1); // Top piece
+		console.log(room.x);
+		console.log(room.y);
+		console.log(room.y + room.h);
+		console.log(room.x + room.w);
+		console.log(room.h);
+
+
+		var wall1 = new Wall(room.x, room.y, room.w, 1); // Top piece
 		var wall2 = new Wall(room.x, room.y, room.h, 2); // Left piece
 		var wall3 = new Wall(room.x, room.y + room.h, room.w, 3); // Bottom piece
 		var wall4 = new Wall(room.x + room.w, room.y, room.h, 4); // Right piece
+
+		//console.log(room);
 
 		rooms.push(room);
 		walls.push(wall1);
@@ -150,11 +159,16 @@ function createRooms()//create the rooms
 				var rHeight = Math.floor(Math.random() * size) + sizeMin; // the height of the next wall
 				var rDisp = Math.floor(Math.random() * (walls[rWall].s / 2) - (walls[rWall].s / 4)); //Displacement of point from -0,5 to 0,5 of wall length
 
+				
+
+				console.log(walls[rWall]);
+				//console.log("displacement" + rDisp + "  rWidth " + rWidth + "  rHeight" + rHeight);
+
 				switch (walls[rWall].id % 4) { // Decides which kind of wall the random wall is, as all directions have a number assigned they will be sorted accordingly
 					case 0: // Right wall
 
 						var room = new Room(
-							walls[rWall].x + 1, // x coord
+							walls[rWall].x + w, // x coord
 							walls[rWall].y + rDisp,  // y coord
 							rWidth, // width
 							rHeight, // height
@@ -171,7 +185,7 @@ function createRooms()//create the rooms
 
 						var room = new Room(
 							walls[rWall].x + rDisp, // x coord
-							walls[rWall].y - (rHeight + 1), // y coord
+							walls[rWall].y - (rHeight * w + w), // y coord
 							rWidth, // width
 							rHeight, // height
 							i);
@@ -186,7 +200,7 @@ function createRooms()//create the rooms
 					case 2: // Left wall
 
 						var room = new Room(
-							walls[rWall].x - (1 + rWidth), // x coord
+							walls[rWall].x - (w + rWidth * w), // x coord
 							walls[rWall].y + rDisp, // y coord 
 							rWidth, // width
 							rHeight, // height
@@ -203,7 +217,7 @@ function createRooms()//create the rooms
 
 						var room = new Room(
 							walls[rWall].x + rDisp, 
-							walls[rWall].y + 1, 
+							walls[rWall].y + w, 
 							rWidth, 
 							rHeight, 
 							i);
@@ -216,7 +230,7 @@ function createRooms()//create the rooms
 						break;
 				}
 		
-
+				////console.log(room);
 				if (stuck == amount * amount){ // The number is the amount of rooms squared, as adding more rooms will increase the complexity exponentially, which would mean more collisions
 					console.log("The initial conditions make this room gen either very difficult, or impossible. This is what you get") // potentially display this within the canvas
 					i = amount;
@@ -233,6 +247,10 @@ function createRooms()//create the rooms
 										i--; // take back count
 										stuck += 1;
 										console.log("room Collision nr. " + stuck)
+										//console.log("Wall nr. " + rWall + " will be spliced")
+										
+										//walls.splice(rWall, 1);
+
 										break;
 									}
 								else if (room.x + room.w >= canvas.width || room.x <= 0 || room.y + room.h >= canvas.height || room.y <= 0) //if outside of canvas
@@ -241,14 +259,25 @@ function createRooms()//create the rooms
 										i--;
 										stuck += 1;
 										console.log("space Collision nr. " + stuck)
+										//console.log("Wall nr. " + rWall + " will be spliced")
+										
+										//walls.splice(rWall, 1);
+
 										break;
 									}
 							}
 						}
 				if(collide == false)//if they have not collided
 					{
+						//console.log("compare to previous rWall"); 
+						//console.log(walls[rWall]);
+
 						rooms.push(room); //add room to the room array
-						walls.splice(rWall, 1); //removes the selected wall from the array, a new room has already been placed here
+						walls.splice(rWall, 1); //removes the selected wall from the array, rooms would overlap if so
+						console.log("Succes!");
+						//console.log("compare to previous rWall"); 
+						//console.log(walls[rWall]);
+						//console.log("still there?")
 						walls.push(wall1);
 						walls.push(wall2);
 						walls.push(wall3);
@@ -361,11 +390,13 @@ function gen()
 {
 	stuck = 0;
 	amount = document.getElementById("amount").value; //amount of rooms value, stored in the html
-	sizeMin = document.getElementById("minSize").value; //minimum size
-	size = document.getElementById("maxSize").value - sizeMin;	//the variance for size, max size was deemed more user friendly while variance more computing friendly
+	sizeMin = parseInt(document.getElementById("minSize").value); //minimum size
+	size = parseInt(document.getElementById("maxSize").value - sizeMin);	//the variance for size, max size was deemed more user friendly while variance more computing friendly
+	corridorW = parseInt(document.getElementById("cWidth").value); //corridor width
+	walls = [];
 	grid = [];
 	rooms = [];
-console.log("amount is " + amount + ", and the size is " + size + ", and the minSize is" + sizeMin)
+//console.log("Initiating values, amount is " + amount + ", and the size is " + size + ", and the minSize is" + sizeMin);
 	makeGrid();
 	createRooms();
 	draw();
