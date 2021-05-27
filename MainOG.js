@@ -121,7 +121,7 @@ class Wall {
 
 function createRooms()//create the rooms
 	{
-		console.log(stuck);
+		console.log("This is the amount of failed tries" + stuck);
 		// First room is out of loop as some special case setup is required
 		var room = new Room(
 			rows/2 - sizeMin, 
@@ -145,9 +145,6 @@ function createRooms()//create the rooms
 		for (var i = 1; i < amount; i++) //for the amount of rooms you want
 			{
 				var rWall =  Math.floor(Math.random() * walls.length); // random number for array
-				
-
-				console.log("This is iteration nr.  " + i);
 
 				var rWidth = Math.floor(Math.random() * size) + sizeMin; // The width of the next wall
 				var rHeight = Math.floor(Math.random() * size) + sizeMin; // the height of the next wall
@@ -218,8 +215,7 @@ function createRooms()//create the rooms
 
 						break;
 				}
-				
-				console.log(room);
+		
 
 				if (stuck == amount * amount){ // The number is the amount of rooms squared, as adding more rooms will increase the complexity exponentially, which would mean more collisions
 					console.log("The initial conditions make this room gen either very difficult, or impossible. This is what you get") // potentially display this within the canvas
@@ -236,7 +232,7 @@ function createRooms()//create the rooms
 										collide = true;//kill room
 										i--; // take back count
 										stuck += 1;
-										console.log("room Collision!")
+										console.log("room Collision nr. " + stuck)
 										break;
 									}
 								else if (room.x + room.w >= canvas.width || room.x <= 0 || room.y + room.h >= canvas.height || room.y <= 0) //if outside of canvas
@@ -244,7 +240,7 @@ function createRooms()//create the rooms
 										collide = true;//kill room
 										i--;
 										stuck += 1;
-										console.log("space Collision!")
+										console.log("space Collision nr. " + stuck)
 										break;
 									}
 							}
@@ -363,13 +359,12 @@ draw()//update
 
 function gen()
 {
-	stuck = 0;
 	amount = document.getElementById("amount"); //amount of rooms value, stored in the html
 	size = document.getElementById("maxSize") - document.getElementById(minSize);	//the variance for size, max size was deemed more user friendly while variance more computing friendly
 	sizeMin = document.getElementById(minSize); //minimum size
 	grid = [];
 	rooms = [];
-
+console.log("amount is " + amount + ", and the size is " + size + ", and the minSize is" + sizeMin)
 	makeGrid();
 	createRooms();
 	draw();
