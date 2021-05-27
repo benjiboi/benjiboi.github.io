@@ -29,7 +29,7 @@
 </canvas>
 					
 <script src="MainOG.js" ></script>
-<label for="amount"> amount of rooms
+					<label for="amount"> amount of rooms </label>
 <input type="number" value="10" id="amount">
 	
 <label for="minSize"> Minimum room size </label>
