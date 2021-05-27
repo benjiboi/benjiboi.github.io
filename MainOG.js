@@ -363,7 +363,8 @@ draw()//update
 
 function gen()
 {
-	stuck = 0;
+	console.log(stuck)
+	var stuck = 0;
 	var amount = document.getElementById("amount"); //amount of rooms value, stored in the html
 var size = document.getElementById("maxSize") - document.getElementById(minSize);	//the variance for size, max size was deemed more user friendly while variance more computing friendly
 var sizeMin = document.getElementById(minSize); //minimum size
