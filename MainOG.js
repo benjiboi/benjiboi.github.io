@@ -361,7 +361,7 @@ function gen()
 {
 	stuck = 0;
 	amount = document.getElementById("amount").value; //amount of rooms value, stored in the html
-	sizeMin = document.getElementById(minSize).value; //minimum size
+	sizeMin = document.getElementById("minSize").value; //minimum size
 	size = document.getElementById("maxSize").value - sizeMin;	//the variance for size, max size was deemed more user friendly while variance more computing friendly
 	grid = [];
 	rooms = [];
