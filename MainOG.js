@@ -121,7 +121,7 @@ class Wall {
 
 function createRooms()//create the rooms
 	{
-		console.log(canvas);
+		console.log(stuck);
 		// First room is out of loop as some special case setup is required
 		var room = new Room(
 			rows/2 - sizeMin, 
@@ -363,7 +363,6 @@ draw()//update
 
 function gen()
 {
-	console.log(stuck)
 	stuck = 0;
 	amount = document.getElementById("amount"); //amount of rooms value, stored in the html
 	size = document.getElementById("maxSize") - document.getElementById(minSize);	//the variance for size, max size was deemed more user friendly while variance more computing friendly
