@@ -43,9 +43,6 @@
 <input type="number" value="1" id="cWidth"> 
 
 <button class="gen" onclick="gen()">New Dungeon</button>
-
-
-			</article>
       
 			
 			<article id="CreatingM">
