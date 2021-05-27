@@ -1,8 +1,7 @@
 
 var canvas = document.getElementById('game');//create canvas var
 var canvasContext = canvas.getContext('2d'); //make it 2d	
-var cScaling = canvas.width / 50; // value for general scaling of objects
-var w = canvas.width / 50; //width of tiles defined by the size of the canvas
+var w = canvas.width / 50; //general scaling in relation to canvas
 // later update will redefine it so size of cells are bound to canvas size, but can be subdivided into cells in relation to rows/cols thereby changing the dimensions of the map
 
 var rows = 50; //how many rows of tiles
@@ -15,10 +14,10 @@ var rooms = []; //where we store the rooms
 var collide = false; //whether or not the rooms are colliding
 var stuck = 0;
 
-var amount = 10; //amount of rooms
-var size = 5;	//the actuall size will be a number bettween 5 and 10 | e.g: size+sizeMin
-var sizeMin = 5;
-var format = cScaling.toString() + "px Arial" //format for room indexing numbers
+var amount = document.getElementById("amount"); //amount of rooms value stored in the html
+var size = document.getElementById("maxSize") - document.getElementById(minSize);	//the variance for size, max size was deemed more user friendly while variance more computing friendly
+var sizeMin = document.getElementById(minSize); //minimum size
+var format = w.toString() + "px Arial" //format for room indexing numbers
 
 var disX; //distance x between rooms
 var disY; //distance y between rooms
@@ -361,3 +360,13 @@ function draw()
 makeGrid()//make map
 createRooms()//make rooms
 draw()//update
+
+function gen()
+{
+	grid = [];
+	rooms = [];
+
+	makeGrid();
+	createRooms();
+	draw();
+}
