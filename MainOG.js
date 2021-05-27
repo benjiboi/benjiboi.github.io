@@ -14,9 +14,9 @@ var rooms = []; //where we store the rooms
 var collide = false; //whether or not the rooms are colliding
 var stuck = 0;
 
-var amount = document.getElementById("amount"); //amount of rooms value stored in the html
-var size = document.getElementById("maxSize") - document.getElementById(minSize);	//the variance for size, max size was deemed more user friendly while variance more computing friendly
-var sizeMin = document.getElementById(minSize); //minimum size
+var amount = 10; //amount of rooms value stored in the html
+var sizeMin = 5; //minimum size
+var size = 5;	//the variance for size
 var format = w.toString() + "px Arial" //format for room indexing numbers
 
 var disX; //distance x between rooms
@@ -363,6 +363,9 @@ draw()//update
 
 function gen()
 {
+	var amount = document.getElementById("amount"); //amount of rooms value, stored in the html
+var size = document.getElementById("maxSize") - document.getElementById(minSize);	//the variance for size, max size was deemed more user friendly while variance more computing friendly
+var sizeMin = document.getElementById(minSize); //minimum size
 	grid = [];
 	rooms = [];
 
