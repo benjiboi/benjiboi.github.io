@@ -121,7 +121,7 @@ class Wall {
 
 function createRooms()//create the rooms
 	{
-		console.log("This is the amount of failed tries" + stuck);
+		console.log("This is the amount of failed tries " + stuck);
 		// First room is out of loop as some special case setup is required
 		var room = new Room(
 			rows/2 - sizeMin, 
@@ -359,9 +359,10 @@ draw()//update
 
 function gen()
 {
-	amount = document.getElementById("amount"); //amount of rooms value, stored in the html
-	size = document.getElementById("maxSize") - document.getElementById(minSize);	//the variance for size, max size was deemed more user friendly while variance more computing friendly
-	sizeMin = document.getElementById(minSize); //minimum size
+	stuck = 0;
+	amount = document.getElementById("amount").value; //amount of rooms value, stored in the html
+	sizeMin = document.getElementById(minSize).value; //minimum size
+	size = document.getElementById("maxSize").value - sizeMin;	//the variance for size, max size was deemed more user friendly while variance more computing friendly
 	grid = [];
 	rooms = [];
 console.log("amount is " + amount + ", and the size is " + size + ", and the minSize is" + sizeMin)
