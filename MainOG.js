@@ -22,7 +22,7 @@ var format = w.toString() + "px Arial" //format for room indexing numbers
 var disX; //distance x between rooms
 var disY; //distance y between rooms
 var corridorW = 1; //corridor width
-
+console.log("this is the minSize " + sizeMin + " and this is the size" + size)
 
  ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
