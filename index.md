@@ -31,6 +31,7 @@
 <script src="MainOG.js" ></script>
 					<label for="amount"> amount of rooms </label>
 <input type="number" value="10" id="amount">
+<br>
 	
 <label for="minSize"> Minimum room size </label>
 <input type="number" value="5" id="minSize">
@@ -38,9 +39,11 @@
 	
 <label for="maxSize"> Maximum room size </label>
 <input type="number" value="10" id="maxSize">
+<br>
 
 <label for="cWidth"> The width of a corridor </label>
 <input type="number" value="1" id="cWidth"> 
+<br>
 
 <button class="gen" onclick="gen()">New Dungeon</button>
       
