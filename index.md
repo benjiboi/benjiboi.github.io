@@ -10,7 +10,7 @@ Det er hvad var det originale mål for programmet, hvor som sagt i min problemfo
 <canvas id="game" width="1000" height="1000">
 </canvas>
 
-<script src "MainOG.js"></script>
+<script src="MainOG.js"></script>
 
 <label for="amount"> amount of rooms </label>
 <input type="number" value="10" id="amount">
