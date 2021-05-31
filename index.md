@@ -158,185 +158,308 @@ class Wall {
 
 function createRooms()//create the rooms
 	{
-		console.log("NEW ITERATION");
-		// First room is out of loop as some special case setup is required
-		var room = new Room(
-			canvas.width / 2 - sizeMin * w, // same as below
-			canvas.height / 2 - sizeMin * w, // - sizeMin for balance
-			Math.floor(Math.random() * size) + sizeMin, 
-			Math.floor(Math.random() * size) + sizeMin,
-			0);
-		//centralized room to seed the random generation
+	console.log("NEW ITERATION");
+	// First room is out of loop as some special case setup is required
+	var room = new Room(
+		canvas.width / 2 - sizeMin * w, // same as below
+		canvas.height / 2 - sizeMin * w, // - sizeMin for balance
+		Math.floor(Math.random() * size) + sizeMin, 
+		Math.floor(Math.random() * size) + sizeMin,
+		0);
+	//centralized room to seed the random generation
 
-		console.log(room.x);
-		console.log(room.y);
-		console.log(room.y + room.h);
-		console.log(room.x + room.w);
-		console.log(room.h);
+	console.log(room.x);
+	console.log(room.y);
+	console.log(room.y + room.h);
+	console.log(room.x + room.w);
+	console.log(room.h);
 
 
-		var wall1 = new Wall(room.x, room.y, room.w, 1); // Top piece
-		var wall2 = new Wall(room.x, room.y, room.h, 2); // Left piece
-		var wall3 = new Wall(room.x, room.y + room.h, room.w, 3); // Bottom piece
-		var wall4 = new Wall(room.x + room.w, room.y, room.h, 4); // Right piece
+	var wall1 = new Wall(room.x, room.y, room.w, 1); // Top piece
+	var wall2 = new Wall(room.x, room.y, room.h, 2); // Left piece
+	var wall3 = new Wall(room.x, room.y + room.h, room.w, 3); // Bottom piece
+	var wall4 = new Wall(room.x + room.w, room.y, room.h, 4); // Right piece
 
-		//console.log(room);
+	//console.log(room);
 
-		rooms.push(room);
+	rooms.push(room);
+	walls.push(wall1);
+	walls.push(wall2);
+	walls.push(wall3);
+	walls.push(wall4);
+	//move items into array
+	
+	
+	for (var i = 1; i < amount; i++) //for the amount of rooms you want
+		{
+		
+		var rWall =  Math.floor(Math.random() * walls.length); // random number for array
+
+		var rWidth = Math.floor(Math.random() * size) + sizeMin; // The width of the next wall
+		var rHeight = Math.floor(Math.random() * size) + sizeMin; // the height of the next wall
+		var rDisp = Math.floor(Math.random() * (walls[rWall].s / 2) - (walls[rWall].s / 4)); //Displacement of point from -0,5 to 0,5 of wall length
+
+		
+
+		console.log(walls[rWall]);
+		//console.log("displacement" + rDisp + "  rWidth " + rWidth + "  rHeight" + rHeight);
+
+		switch (walls[rWall].id % 4) { // Decides which kind of wall the random wall is, as all directions have a number assigned they will be sorted accordingly
+			case 0: // Right wall
+
+				var room = new Room(
+					walls[rWall].x + w, // x coord
+					walls[rWall].y + rDisp,  // y coord
+					rWidth, // width
+					rHeight, // height
+					i);
+				
+				// Exclude connecting wall
+				var wall1 = new Wall(room.x, room.y, room.w, 1); // top wall
+				var wall3 = new Wall(room.x, room.y + room.h, room.w, 3); // bottom wall
+				var wall3 = new Wall(room.x + room.w, room.y, room.h, 4); // right wall
+
+				break;
+
+			case 1: // Top wall
+
+				var room = new Room(
+					walls[rWall].x + rDisp, // x coord
+					walls[rWall].y - (rHeight * w + w), // y coord
+					rWidth, // width
+					rHeight, // height
+					i);
+
+				// Exclude connecting wall
+				var wall1 = new Wall(room.x, room.y, room.w, 1); // top wall
+				var wall2 = new Wall(room.x, room.y, room.h, 2); // left wall
+				var wall3 = new Wall(room.x + room.w, room.y, room.h, 4); // right wall
+
+				break;
+
+			case 2: // Left wall
+
+				var room = new Room(
+					walls[rWall].x - (w + rWidth * w), // x coord
+					walls[rWall].y + rDisp, // y coord 
+					rWidth, // width
+					rHeight, // height
+					i);
+				
+				// Exclude connecting wall
+				var wall1 = new Wall(room.x, room.y, room.w, 1); // top wall
+				var wall2 = new Wall(room.x, room.y, room.h, 2); // left wall
+				var wall3 = new Wall(room.x, room.y + room.h, room.w, 3); // bottom wall
+
+				break;
+
+			case 3: // Bottom wall
+
+				var room = new Room(
+					walls[rWall].x + rDisp, 
+					walls[rWall].y + w, 
+					rWidth, 
+					rHeight, 
+					i);
+
+				// Exclude connecting wall
+				var wall1 = new Wall(room.x, room.y, room.h, 2); // left wall
+				var wall2 = new Wall(room.x, room.y + room.h, room.w, 3); // bottom wall
+				var wall3 = new Wall(room.x + room.w, room.y, room.h, 4); // right wall
+
+				break;
+			}
+				
+////////////////////////// Mere Kode I Næste Sektion, Funktionen er stadigvæk ikke beskrevet færdig //////////////
+```
+
+
+# Kollision og checks
+
+Her er hvor lykken stopper, og hvor forskellige problemer bliver undersøgt. Først og fremmest er der om et rum kolliderer med et andet rum, en anden forlykke kigger igennem de forrige rums dimensioner og fastlægger om der er noget som støder ind i hinanden. Derefter skal der også undersøges om rummet falder udenfor selve canvasset, det behøver kun et check.
+Dog kan de to kollisions undersøgelser skabe et uendelig lykke, da for hvor fejl vil for-loopets total blive talt ned med 1, som betyder at lykken gentager sig selv til der er en løsning.
+Men, hvis der ikke findes en løsning vil hjemmesiden støde ind i et problem. Derfor har jeg inkluderet et simpelt check der undersøger hvor mange gange det her er blevet gentaget. Kræver stadigvæk lidt fine tuning, men det holder hjemmesiden fra at crashe hvis forkerte værdier bliver sat ind.
+Der skal desuden noteres at når noget kommer igennem kollision og checks vil de blive tilført til arrayet, hvor tilfældighenden kan forsætte. Dog vil den tilfældige mur også blive taget ud, da det er usandsynligt at endnu en mur ville kunne blive genereret oven på det forrige.
+
+``` js
+////console.log(room);
+if (stuck == amount * amount){ // The number is the amount of rooms squared, as adding more rooms will increase the complexity exponentially, which would mean more collisions
+	console.log("The initial conditions make this room gen either very difficult, or impossible. This is what you get") // potentially display this within the canvas
+	i = amount;
+	break;
+} else {
+
+		for (var e = 0; e < rooms.length; e++) //for all the previous rooms
+			{
+				collide = false//they are not colliding
+
+				if(room.x <= rooms[e].x+rooms[e].w && room.x+room.w >= rooms[e].x && room.y <= rooms[e].y+rooms[e].h && room.y+room.h >= rooms[e].y)//if colliding with previous room
+					{
+						collide = true;//kill room
+						i--; // take back count
+						stuck += 1;
+						console.log("room Collision nr. " + stuck)
+						//console.log("Wall nr. " + rWall + " will be spliced")
+						
+						//walls.splice(rWall, 1);
+
+						break;
+					}
+				else if (room.x + room.w >= canvas.width || room.x <= 0 || room.y + room.h >= canvas.height || room.y <= 0) //if outside of canvas
+					{
+						collide = true;//kill room
+						i--;
+						stuck += 1;
+						console.log("space Collision nr. " + stuck)
+						//console.log("Wall nr. " + rWall + " will be spliced")
+						
+						//walls.splice(rWall, 1);
+
+						break;
+					}
+			}
+		}
+if(collide == false)//if they have not collided
+	{
+		//console.log("compare to previous rWall"); 
+		//console.log(walls[rWall]);
+
+		rooms.push(room); //add room to the room array
+		walls.splice(rWall, 1); //removes the selected wall from the array, rooms would overlap if so
+		console.log("Succes!");
+		//console.log("compare to previous rWall"); 
+		//console.log(walls[rWall]);
+		//console.log("still there?")
 		walls.push(wall1);
 		walls.push(wall2);
 		walls.push(wall3);
-		walls.push(wall4);
-		
-		for (var i = 1; i < amount; i++) //for the amount of rooms you want
+
+		if(i>0)//make corridors
 			{
-				var rWall =  Math.floor(Math.random() * walls.length); // random number for array
-
-				var rWidth = Math.floor(Math.random() * size) + sizeMin; // The width of the next wall
-				var rHeight = Math.floor(Math.random() * size) + sizeMin; // the height of the next wall
-				var rDisp = Math.floor(Math.random() * (walls[rWall].s / 2) - (walls[rWall].s / 4)); //Displacement of point from -0,5 to 0,5 of wall length
-
-				
-
-				console.log(walls[rWall]);
-				//console.log("displacement" + rDisp + "  rWidth " + rWidth + "  rHeight" + rHeight);
-
-				switch (walls[rWall].id % 4) { // Decides which kind of wall the random wall is, as all directions have a number assigned they will be sorted accordingly
-					case 0: // Right wall
-
-						var room = new Room(
-							walls[rWall].x + w, // x coord
-							walls[rWall].y + rDisp,  // y coord
-							rWidth, // width
-							rHeight, // height
-							i);
-						
-						// Exclude connecting wall
-						var wall1 = new Wall(room.x, room.y, room.w, 1); // top wall
-						var wall3 = new Wall(room.x, room.y + room.h, room.w, 3); // bottom wall
-						var wall3 = new Wall(room.x + room.w, room.y, room.h, 4); // right wall
-
-						break;
-
-					case 1: // Top wall
-
-						var room = new Room(
-							walls[rWall].x + rDisp, // x coord
-							walls[rWall].y - (rHeight * w + w), // y coord
-							rWidth, // width
-							rHeight, // height
-							i);
-
-						// Exclude connecting wall
-						var wall1 = new Wall(room.x, room.y, room.w, 1); // top wall
-						var wall2 = new Wall(room.x, room.y, room.h, 2); // left wall
-						var wall3 = new Wall(room.x + room.w, room.y, room.h, 4); // right wall
-
-						break;
-
-					case 2: // Left wall
-
-						var room = new Room(
-							walls[rWall].x - (w + rWidth * w), // x coord
-							walls[rWall].y + rDisp, // y coord 
-							rWidth, // width
-							rHeight, // height
-							i);
-						
-						// Exclude connecting wall
-						var wall1 = new Wall(room.x, room.y, room.w, 1); // top wall
-						var wall2 = new Wall(room.x, room.y, room.h, 2); // left wall
-						var wall3 = new Wall(room.x, room.y + room.h, room.w, 3); // bottom wall
-
-						break;
-
-					case 3: // Bottom wall
-
-						var room = new Room(
-							walls[rWall].x + rDisp, 
-							walls[rWall].y + w, 
-							rWidth, 
-							rHeight, 
-							i);
-
-						// Exclude connecting wall
-						var wall1 = new Wall(room.x, room.y, room.h, 2); // left wall
-						var wall2 = new Wall(room.x, room.y + room.h, room.w, 3); // bottom wall
-						var wall3 = new Wall(room.x + room.w, room.y, room.h, 4); // right wall
-
-						break;
-				}
-				
-////////////////////////// Mere Kode I Næste Sektion, Funktionen er stadigvæk ikke beskrevet færdig //////////////
-		```
-		
-		
-		# Kollision og checks
-		
-		[skal live kopieres ind]
-		
-		
-		
-		``` js
-				////console.log(room);
-				if (stuck == amount * amount){ // The number is the amount of rooms squared, as adding more rooms will increase the complexity exponentially, which would mean more collisions
-					console.log("The initial conditions make this room gen either very difficult, or impossible. This is what you get") // potentially display this within the canvas
-					i = amount;
-					break;
-				} else {
-	
-						for (var e = 0; e < rooms.length; e++) //for all the previous rooms
-							{
-								collide = false//they are not colliding
-
-								if(room.x <= rooms[e].x+rooms[e].w && room.x+room.w >= rooms[e].x && room.y <= rooms[e].y+rooms[e].h && room.y+room.h >= rooms[e].y)//if colliding with previous room
-									{
-										collide = true;//kill room
-										i--; // take back count
-										stuck += 1;
-										console.log("room Collision nr. " + stuck)
-										//console.log("Wall nr. " + rWall + " will be spliced")
-										
-										//walls.splice(rWall, 1);
-
-										break;
-									}
-								else if (room.x + room.w >= canvas.width || room.x <= 0 || room.y + room.h >= canvas.height || room.y <= 0) //if outside of canvas
-									{
-										collide = true;//kill room
-										i--;
-										stuck += 1;
-										console.log("space Collision nr. " + stuck)
-										//console.log("Wall nr. " + rWall + " will be spliced")
-										
-										//walls.splice(rWall, 1);
-
-										break;
-									}
-							}
-						}
-				if(collide == false)//if they have not collided
-					{
-						//console.log("compare to previous rWall"); 
-						//console.log(walls[rWall]);
-
-						rooms.push(room); //add room to the room array
-						walls.splice(rWall, 1); //removes the selected wall from the array, rooms would overlap if so
-						console.log("Succes!");
-						//console.log("compare to previous rWall"); 
-						//console.log(walls[rWall]);
-						//console.log("still there?")
-						walls.push(wall1);
-						walls.push(wall2);
-						walls.push(wall3);
-
-						if(i>0)//make corridors
-							{
-								hCorridor(rooms[i-1].center[0], room.center[0], rooms[i-1].center[1], room.center[1])
-								vCorridor(rooms[i-1].center[0], room.center[0], rooms[i-1].center[1], room.center[1])
-							}
-					}
+				hCorridor(rooms[i-1].center[0], room.center[0], rooms[i-1].center[1], room.center[1])
+				vCorridor(rooms[i-1].center[0], room.center[0], rooms[i-1].center[1], room.center[1])
 			}
 	}
+}
+}
 
 ```
+
+# De sidste småting samt html integration
+
+De sidste dele der bliver kaldt efter hver succesful rum er korridorene, meget simpelt undersøger programmet distancen, definerer den bruger de førnævnte carve funktioner og laver en vej fra det ene rum til det andet.
+
+Til sidst er det værd at nævne hvordan programmet forbinder sig til html udover at den viser et bille på canvas.
+
+Det krævede til dykken rundt i dokumentation men det var bestemt muligt. Det krævede dog at specificere at alle tal værdierne var integers når de skulle udregnes. Alt det andet nulstiller bare programmet endten ved at tegne over det eller at sætte variablet tilbage til hvad det var før.
+
+
+```js
+
+function hCorridor(x1,x2,y1,y2)//horizontal corridor creator
+	{
+		if(x1 > x2)//if the first room is further towards the right than the second one
+			{
+				disX = x1-x2 //find the distance between rooms
+				disX += 1
+				
+				for (var i = 0; i < grid.length; i++) 
+					{
+						grid[i].carveH(disX, x2, y2)//carve out the corridor horizontally
+					}				
+			}
+		else//if the second room is further towards the right then the first one
+			{
+				disX = x2 - x1 //find the distance between rooms
+				disX += 1
+				for (var i = 0; i < grid.length; i++) 
+					{
+						grid[i].carveH(disX, x1, y1)//carve out corridor
+					}
+			}
+			
+	}
+	
+function vCorridor(x1,x2,y1,y2)//vertical corridor creator
+{
+	var x;
+	
+	if(y1 > y2)//if the first room is further towards the bottom then the second one
+		{
+			disY = y1-y2 //find the distance between rooms
+			disY += 1
+			
+			if(x2+(disX-1) > x1+(disX-1))//find the correct x coord
+				{
+					x = x2
+				}
+			else 
+				{
+				x = x2+(disX-1)
+				}
+			
+			for(var i = 0; i < grid.length; i++) 
+				{
+					grid[i].carveV(disY, x, y2)//carve out corridor
+				}
+		}
+	else//if the second room is further towards the bottom then the first one
+		{
+			disY = y2 - y1 //find the distance between rooms
+			disY += 1
+			
+			if(x1+(disX-1) > x2+(disX-1))//find the correct x coord
+				{
+					x = x1
+				}	
+			else 
+				{
+					x = x1+(disX-1)
+				}
+				
+			for (var i = 0; i < grid.length; i++) 
+				{
+					grid[i].carveV(disY, x, y1)//carve out corridor
+				}
+			
+		}
+		
+}
+	
+
+function draw() 
+{
+for (var i = 0; i < grid.length; i++) 
+	{
+		grid[i].carve();//carve out the rooms
+		grid[i].show();//draw the map
+	}
+	
+for (var i = 0; i < rooms.length; i++) 
+	{
+		rooms[i].draw();//draw the rooms number
+	}
+}
+
+makeGrid()//make map
+createRooms()//make rooms
+draw()//update
+
+function gen()
+{
+	stuck = 0;
+	amount = document.getElementById("amount").value; //amount of rooms value, stored in the html
+	sizeMin = parseInt(document.getElementById("minSize").value); //minimum size
+	size = parseInt(document.getElementById("maxSize").value - sizeMin);	//the variance for size, max size was deemed more user friendly while variance more computing friendly
+	corridorW = parseInt(document.getElementById("cWidth").value); //corridor width
+	walls = [];
+	grid = [];
+	rooms = [];
+//console.log("Initiating values, amount is " + amount + ", and the size is " + size + ", and the minSize is" + sizeMin);
+	makeGrid();
+	createRooms();
+	draw();
+}
+
+```
+
