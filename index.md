@@ -7,7 +7,7 @@ som forhindrer programmet i at køre uendeligt, samt html integration.
 Det er hvad var det originale mål for programmet, hvor som sagt i min problemformulering:
 > Jeg havde lyst til at lave programmet så det var let tilgængeligt for alle med en computer
 
-<canvas id="game" width="1000" height="1000">
+<canvas id="game" width="500" height="500">
 </canvas>
 
 <script src="MainOG.js"></script>
