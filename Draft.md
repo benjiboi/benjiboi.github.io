@@ -25,7 +25,7 @@ Det er hvad var det originale mål for programmet, hvor som sagt i min problemfo
 <label for="cWidth"> The width of a corridor </label>
 <input type="number" value="1" id="cWidth">
 
-<button class="gen" onclick="gen()">New Dungeon</button>
+<button class="gen" onclick="gen()">New Room Complex</button>
 
 En specifik ændring var også at gøre programmet kunne justere sig til det canvas som der bliver specificeret.
 
